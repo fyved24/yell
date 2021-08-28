@@ -37,5 +37,6 @@ class HomeState {
 
   get alias => this._alias.value;
 
-  var messages = <Message>[].obs;
+  var messages = <Message>[Message(title: "t1", content: "a1"),
+    Message(title: "t2", content: "a2"),].obs;
 }

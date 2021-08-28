@@ -12,30 +12,35 @@ class HistoryListWidget extends GetView<HomeController> {
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
+            Container(
+              height: 200.0,
+              child: DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Colors.blue,
+                ),
+                child: Obx(() =>
+                    Text(controller.state.alias,
+                        style: TextStyle(
+                          fontSize: 25,
+                          color: Colors.white,
+                        ))),
               ),
-              child: Text('Drawer Header'),
             ),
-            ListTile(
-              title: const Text('Item 1'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Item 2'),
-              onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
-              },
-            ),
+            Container(
+                height: double.maxFinite,
+                child: Obx(() {
+                  return ListView.separated(
+                    itemCount: controller.state.messages.length,
+                    separatorBuilder: (_, __) => Divider(),
+                    itemBuilder: (BuildContext context, int index) {
+                      return ListTile(
+                          title: Text('${controller.state.messages[index].title}'),
+                          subtitle: Text('${controller.state.messages[index].content}'),
+                          trailing: Icon(Icons.copy),
+                          onTap: () {});
+                    },
+                  );
+                })),
           ],
         ),
       ),
