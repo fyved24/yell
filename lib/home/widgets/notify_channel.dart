@@ -18,6 +18,7 @@ class NotifyChannelWidget extends GetView<HomeController> {
   Widget build(BuildContext context) {
     var url = "https://push.ironz.cn/${controller.state.alias}";
     var log = Logger();
+    controller.initTextController();
     return Center(
       child: Card(
         elevation: 5.0, //设置阴影
@@ -30,8 +31,9 @@ class NotifyChannelWidget extends GetView<HomeController> {
             children: [
               TextField(
                 autofocus: false,
+                controller: controller.topicController,
                 decoration: InputDecoration(
-                    labelText: "标题",
+                    labelText: "主题",
                     hintText: title,
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(10.0),
@@ -39,6 +41,7 @@ class NotifyChannelWidget extends GetView<HomeController> {
               ),
               TextField(
                 autofocus: false,
+                controller: controller.contentController,
                 decoration: InputDecoration(
                     labelText: "内容",
                     hintText: content,
@@ -54,8 +57,8 @@ class NotifyChannelWidget extends GetView<HomeController> {
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(10.0),
                         labelText: "链接",
-                        hintText: "https://push.ironz.cn/${controller.state
-                            .alias}",
+                        hintText:
+                            "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}",
                         floatingLabelBehavior: FloatingLabelBehavior.always));
               }),
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -63,6 +66,7 @@ class NotifyChannelWidget extends GetView<HomeController> {
                   icon: Icon(Icons.copy),
                   color: Colors.blue,
                   onPressed: () {
+                    var url = "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}";
                     Clipboard.setData(ClipboardData(text: url));
                     Fluttertoast.showToast(
                         msg: "$url copied to clipboard",
@@ -79,7 +83,8 @@ class NotifyChannelWidget extends GetView<HomeController> {
                   icon: Icon(Icons.send),
                   color: Colors.blue,
                   onPressed: () {
-                    const url = "https://flutter.io";
+                    var url =
+                        "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}";
                     launchURL(url);
                     log.i("send");
                   },

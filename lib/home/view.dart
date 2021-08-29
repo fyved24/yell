@@ -17,18 +17,11 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     Get.put(HomeController());
+
     return Scaffold(
       appBar: AppBar(title: Text(controller.state.title)),
       body: _buildView(),
       drawer: HistoryListWidget(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // Get.snackbar("alias", controller.state.alias);
-          print(controller.state.regId);
-          print(controller.state.alias);
-        },
-        child: Icon(Icons.play_arrow),
-      ),
     );
   }
 }

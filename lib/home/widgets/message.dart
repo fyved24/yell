@@ -1,11 +1,11 @@
 class Message {
-  final String title;
+  final String topic;
   final String content;
 
-  Message({required this.title, required this.content});
+  Message({required this.topic, required this.content});
 
   factory Message.fromJson(Map<String, dynamic> json) =>
-      Message(title: json['title'], content: json['content']);
+      Message(topic: json['title'], content: json['content']);
 
-  Map<String, dynamic> toJson() => {'title': title, 'content': content};
+  Map<String, dynamic> toJson() => {'title': topic, 'content': content};
 }

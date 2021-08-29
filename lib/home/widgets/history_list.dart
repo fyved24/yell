@@ -8,12 +8,13 @@ class HistoryListWidget extends GetView<HomeController> {
     return Container(
       width: 230,
       child: Drawer(
-        child: ListView(
+        child: Column(
           // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
+          // padding: EdgeInsets.zero,
           children: [
             Container(
               height: 200.0,
+              width: double.infinity,
               child: DrawerHeader(
                 decoration: BoxDecoration(
                   color: Colors.blue,
@@ -26,21 +27,24 @@ class HistoryListWidget extends GetView<HomeController> {
                         ))),
               ),
             ),
-            Container(
-                height: double.maxFinite,
-                child: Obx(() {
-                  return ListView.separated(
-                    itemCount: controller.state.messages.length,
-                    separatorBuilder: (_, __) => Divider(),
-                    itemBuilder: (BuildContext context, int index) {
-                      return ListTile(
-                          title: Text('${controller.state.messages[index].title}'),
-                          subtitle: Text('${controller.state.messages[index].content}'),
-                          trailing: Icon(Icons.copy),
-                          onTap: () {});
-                    },
-                  );
-                })),
+            Expanded(
+                flex: 1,
+                child: Scrollbar(
+                  child: Obx(() {
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      itemCount: controller.state.messages.length,
+                      separatorBuilder: (_, __) => Divider(),
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                            title: Text('${controller.state.messages[index].topic}'),
+                            subtitle: Text('${controller.state.messages[index].content}'),
+                            trailing: Icon(Icons.copy),
+                            onTap: () {});
+                      },
+                    );
+                  }),
+                )),
           ],
         ),
       ),

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
@@ -9,6 +12,8 @@ import 'index.dart';
 
 class HomeController extends GetxController {
   final logger = Logger();
+  var topicController = TextEditingController();
+  var contentController = TextEditingController();
 
   HomeController();
 
@@ -34,13 +39,13 @@ class HomeController extends GetxController {
   /// You can use it to initialize something for the controller.
   @override
   void onInit() async {
-    List? storedTodos = GetStorage().read<List>('messages');
-    if (storedTodos != null) {
-      state.messages = storedTodos.map((e) => Message.fromJson(e)).toList().obs;
+    List? storedMessages = GetStorage().read<List>('messages');
+    if (storedMessages != null) {
+      state.messages = storedMessages.map((e) => Message.fromJson(e)).toList().obs;
     }
     ever(state.messages, (value) {
-      print('stored');
-      GetStorage().write('todos', state.messages.toList());
+      logger.i('stored messages length: ${state.messages.length}');
+      GetStorage().write('messages', state.messages.toList());
     });
     super.onInit();
 
@@ -75,13 +80,13 @@ class HomeController extends GetxController {
         });
         if (storedAlias == null) {
           storedAlias = randomAlpha(10);
-          state.alias = storedAlias;
-          logger.d('Alias: ' + state.alias);
-          GetStorage().write('alias', storedAlias);
-          logger.v("set alias");
-          XiaoMiPushPlugin.setAlias(
-              alias: state.alias, category: "normal_channel");
         }
+        state.alias = storedAlias;
+        logger.d('Alias: ' + state.alias);
+        GetStorage().write('alias', storedAlias);
+        logger.v("set alias");
+        XiaoMiPushPlugin.setAlias(
+            alias: state.alias, category: "normal_channel");
       });
     } else {
       logger.i("loaded data from storage");
@@ -116,6 +121,24 @@ class HomeController extends GetxController {
 
   /// 小米推送监听器
   onXiaoMiPushListener(type, params) {
-    logger.i(params.toString());
+    logger.i("${jsonEncode(params)}");
+    logger.i("${params.title}");
+    logger.i("${params.description}");
+    state.messages
+        .insert(0, Message(topic: params.title, content: params.description));
+  }
+
+  initTextController() {
+    // topicController.text = "主题";
+    // contentController.text = "内容";
+
+    topicController.addListener(() {
+      state.topic = topicController.text.trim();
+      print(state.topic);
+    });
+    contentController.addListener(() {
+      state.content = contentController.text.trim();
+      print(state.content);
+    });
   }
 }
