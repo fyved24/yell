@@ -17,7 +17,8 @@ class HomeState {
       }
     });
   }
-  var url = "https://api.ironz.cn";
+  var url = "https://api.ironz.cn".obs;
+
   // title
   final _title = "".obs;
   var _regId = "".obs;

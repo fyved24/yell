@@ -40,13 +40,23 @@ class HomeController extends GetxController {
   @override
   void onInit() async {
     List? storedMessages = GetStorage().read<List>('messages');
+    String? url = GetStorage().read('url');
     if (storedMessages != null) {
-      state.messages = storedMessages.map((e) => Message.fromJson(e)).toList().obs;
+      state.messages =
+          storedMessages.map((e) => Message.fromJson(e)).toList().obs;
+    }
+    if (url != null) {
+      state.url.value = url;
     }
     ever(state.messages, (value) {
       logger.i('stored messages length: ${state.messages.length}');
       GetStorage().write('messages', state.messages.toList());
     });
+    ever(state.url, (value) {
+      logger.i('stored url: $url');
+      GetStorage().write('url', state.url.value);
+    });
+
     super.onInit();
 
     // new Object

@@ -19,7 +19,17 @@ class HomePage extends GetView<HomeController> {
     Get.put(HomeController());
 
     return Scaffold(
-      appBar: AppBar(title: Text(controller.state.title)),
+      appBar: AppBar(
+        title: Text(controller.state.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(() => SettingsWidget());
+            },
+            icon: Icon(Icons.settings),
+          )
+        ],
+      ),
       body: _buildView(),
       drawer: HistoryListWidget(),
     );
