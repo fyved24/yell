@@ -8,10 +8,7 @@ import 'widgets/widgets.dart';
 class HomePage extends GetView<HomeController> {
   // Content page
   Widget _buildView() {
-    return NotifyChannelWidget(
-      title: "你好",
-      content: "世界",
-    );
+    return ChannelListWidget();
   }
 
   @override

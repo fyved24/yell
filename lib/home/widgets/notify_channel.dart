@@ -16,7 +16,6 @@ class NotifyChannelWidget extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    var url = "https://push.ironz.cn/${controller.state.alias}";
     var log = Logger();
     controller.initTextController();
     return Center(
