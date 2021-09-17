@@ -8,11 +8,11 @@ import 'package:flutter/services.dart';
 import '../index.dart';
 
 /// hello
-class NotifyChannelWidget extends GetView<HomeController> {
+class TouchCopyChannelWidget extends GetView<HomeController> {
   final String title;
   final String content;
 
-  NotifyChannelWidget({required this.title, required this.content});
+  TouchCopyChannelWidget({required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +28,10 @@ class NotifyChannelWidget extends GetView<HomeController> {
           // height: 500,
           child: Column(
             children: [
+              Text(
+                "点击复制",
+                textAlign: TextAlign.left,
+              ),
               TextField(
                 autofocus: false,
                 controller: controller.topicController,
