@@ -125,7 +125,6 @@ class HomeController extends GetxController {
   void dispose() {
     super.dispose();
     XiaoMiPushPlugin.removeListener(onXiaoMiPushListener);
-
     // dispose Release object
   }
 
@@ -134,8 +133,11 @@ class HomeController extends GetxController {
     logger.i("${jsonEncode(params)}");
     logger.i("${params.title}");
     logger.i("${params.description}");
+    logger.i("params");
+    logger.i("$params");
     state.messages
-        .insert(0, Message(topic: params.title, content: params.description));
+        .add(Message(topic: params.title, content: params.description));
+
   }
 
   initTextController() {
