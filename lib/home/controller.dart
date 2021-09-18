@@ -140,12 +140,12 @@ class HomeController extends GetxController {
   onMessageArrived(type, params) {
     if (type == XiaoMiPushListenerTypeEnum.NotificationMessageArrived) {
       logger.i("${jsonEncode(params)}");
-      logger.i("${params.title}");
+      logger.i("${params.topic}");
       logger.i("${params.description}");
       logger.i("params");
       logger.i("$params");
       state.messages
-          .add(Message(topic: params.title, content: params.description));
+          .add(Message(topic: params.topic, content: params.description));
     }
   }
   // 点击消息
