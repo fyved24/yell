@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/services.dart';
-import 'package:yell/home/utils/commnUtils.dart';
 
 import '../index.dart';
 
@@ -12,12 +9,33 @@ import '../index.dart';
 class NormalChannelWidget extends GetView<HomeController> {
   final String title;
   final String content;
+  final RxString url;
+  final void Function(String, String)? b1Clicked;
+  final void Function(String, String)? b2Clicked;
+  final void Function(String, String)? onChange;
 
-  NormalChannelWidget({required this.title, required this.content});
+  NormalChannelWidget({
+    required this.title,
+    required this.content,
+    required this.url,
+    required this.b1Clicked,
+    required this.b2Clicked,
+    required this.onChange,
+  });
 
   @override
   Widget build(BuildContext context) {
-    var log = Logger();
+    var topicController = TextEditingController();
+    topicController.text = title;
+    var contentController = TextEditingController();
+    contentController.text = content;
+    topicController.addListener(() {
+      onChange!(topicController.text.trim(), contentController.text.trim());
+    });
+    contentController.addListener(() {
+      onChange!(topicController.text.trim(), contentController.text.trim());
+    });
+
     controller.initTextController();
     return Center(
       child: Card(
@@ -35,55 +53,48 @@ class NormalChannelWidget extends GetView<HomeController> {
               ),
               TextField(
                 autofocus: false,
-                controller: controller.topicController,
+                controller: topicController,
                 decoration: InputDecoration(
                     labelText: "主题",
-                    hintText: title,
+                    hintText: "你好",
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(10.0),
                     floatingLabelBehavior: FloatingLabelBehavior.always),
               ),
               TextField(
                 autofocus: false,
-                controller: controller.contentController,
+                controller: contentController,
                 decoration: InputDecoration(
-                    labelText: "内容",
+                    labelText: title,
                     hintText: content,
                     border: InputBorder.none,
                     contentPadding: EdgeInsets.all(10.0),
                     floatingLabelBehavior: FloatingLabelBehavior.always),
               ),
               Divider(),
-              Obx(() {
+              Obx((){
                 return TextField(
                     readOnly: true,
                     decoration: InputDecoration(
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(10.0),
                         labelText: "链接",
-                        hintText:
-                            "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}",
+                        hintText: url.value,
                         floatingLabelBehavior: FloatingLabelBehavior.always));
               }),
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
                 IconButton(
                   icon: Icon(Icons.copy),
                   color: Colors.blue,
-                  onPressed: () {
-                    var url = "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}";
-                    Clipboard.setData(ClipboardData(text: url));
-                    showToast("$url copied to clipboard");
-                    log.i("$url copied to clipboard");
+                  onPressed: (){
+                    b1Clicked!(topicController.text, contentController.text);
                   },
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
                   color: Colors.blue,
-                  onPressed: () {
-                    var url =
-                        "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}";
-                    launchURL(url);
-                    log.i("send");
+                  onPressed:(){
+                    b2Clicked!(topicController.text, contentController.text);
                   },
                 ),
               ])
@@ -93,7 +104,4 @@ class NormalChannelWidget extends GetView<HomeController> {
       ),
     );
   }
-
-  void launchURL(url) async =>
-      await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
 }
