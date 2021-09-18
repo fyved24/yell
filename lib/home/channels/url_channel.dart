@@ -13,7 +13,7 @@ class UrlChannel extends GetView<HomeController> {
   Widget build(BuildContext context) {
     url.value = "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}/op";
     return ChannelWidget(
-      title: "点击消息打开链接",
+      title: "点击消息横幅打开链接",
       topic: "你好",
       content: "世界",
       url: url,

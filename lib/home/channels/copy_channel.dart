@@ -13,7 +13,7 @@ class CopyChannel extends GetView<HomeController> {
   Widget build(BuildContext context) {
     url.value = "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}/cp";
     return ChannelWidget(
-      title: "点击消息复制内容",
+      title: "点击消息横幅复制内容",
       topic: "你好",
       content: "世界",
       url: url,
