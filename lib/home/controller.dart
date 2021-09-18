@@ -1,11 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:xiao_mi_push_plugin/xiao_mi_push_plugin.dart';
 import 'package:random_string/random_string.dart';
+import 'package:xiao_mi_push_plugin/xiao_mi_push_plugin_listener.dart';
+import 'package:yell/home/utils/commnUtils.dart';
 import 'package:yell/home/widgets/message.dart';
 
 import 'index.dart';
@@ -104,7 +110,8 @@ class HomeController extends GetxController {
       state.alias = storedAlias;
     }
 
-    XiaoMiPushPlugin.addListener(onXiaoMiPushListener);
+    XiaoMiPushPlugin.addListener(onMessageArrived);
+    XiaoMiPushPlugin.addListener(onClicked);
   }
 
   /// Called before the [onDelete] method. [onClose] may be used
@@ -124,20 +131,43 @@ class HomeController extends GetxController {
   @override
   void dispose() {
     super.dispose();
-    XiaoMiPushPlugin.removeListener(onXiaoMiPushListener);
+    XiaoMiPushPlugin.removeListener(onMessageArrived);
+    XiaoMiPushPlugin.removeListener(onClicked);
     // dispose Release object
   }
 
-  /// 小米推送监听器
-  onXiaoMiPushListener(type, params) {
-    logger.i("${jsonEncode(params)}");
-    logger.i("${params.title}");
-    logger.i("${params.description}");
-    logger.i("params");
-    logger.i("$params");
-    state.messages
-        .add(Message(topic: params.title, content: params.description));
-
+  // 消息到达
+  onMessageArrived(type, params) {
+    if (type == XiaoMiPushListenerTypeEnum.NotificationMessageArrived) {
+      logger.i("${jsonEncode(params)}");
+      logger.i("${params.title}");
+      logger.i("${params.description}");
+      logger.i("params");
+      logger.i("$params");
+      state.messages
+          .add(Message(topic: params.title, content: params.description));
+    }
+  }
+  // 点击消息
+  onClicked(type, params) async {
+    if (type == XiaoMiPushListenerTypeEnum.NotificationMessageClicked) {
+      logger.i("${jsonEncode(params)}");
+      int action = int.parse(params.extra.action);
+      logger.i("action: $action");
+      switch(action) {
+        case 1:
+          await Clipboard.setData(ClipboardData(text: params.content));
+          showToast("payload copied to clipboard!");
+          logger.i("payload copied to clipboard!");
+          break;
+        case 2:
+          var url = "http://${params.content}";
+          await canLaunch(url) ? await launch(url) : throw 'Could not launch ${url}';
+          break;
+        default:
+          return;
+      }
+    }
   }
 
   initTextController() {

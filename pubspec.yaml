@@ -23,7 +23,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  xiao_mi_push_plugin: ^2.0.0
+  xiao_mi_push_plugin:
+    path: ../../opensource/FlutterXiaoMiPushPlugin
   get: ^4.3.4
   get_storage: ^2.0.3
   random_string: ^2.3.1
