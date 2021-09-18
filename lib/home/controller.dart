@@ -61,25 +61,12 @@ class HomeController extends GetxController {
       logger.i('stored url: $url');
       GetStorage().write('url', state.url.value);
     });
-
-    super.onInit();
-
-    // new Object
-    // Initial static data
-  }
-
-  ///Called 1 frame after onInit(). This is the ideal place to enter
-  ///Navigation events, such as snackbar, dialog or new route, or
-  ///async Asynchronous request.
-  @override
-  void onReady() {
-    super.onReady();
     String? storedAlias = GetStorage().read("alias");
     String? storedRegId = GetStorage().read("regId");
     if (storedRegId == null) {
       logger.d("onInit");
       XiaoMiPushPlugin.init(
-              appId: "2882303761520026355", appKey: "5812002676355")
+          appId: "2882303761520026355", appKey: "5812002676355")
           .then((value) {
         logger.d("init then");
         XiaoMiPushPlugin.getRegId().then((value) {
@@ -108,6 +95,19 @@ class HomeController extends GetxController {
       state.regId = storedRegId;
       state.alias = storedAlias;
     }
+    super.onInit();
+
+    // new Object
+    // Initial static data
+  }
+
+  ///Called 1 frame after onInit(). This is the ideal place to enter
+  ///Navigation events, such as snackbar, dialog or new route, or
+  ///async Asynchronous request.
+  @override
+  void onReady() {
+    super.onReady();
+
 
     XiaoMiPushPlugin.addListener(onMessageArrived);
     XiaoMiPushPlugin.addListener(onClicked);
