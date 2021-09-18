@@ -3,19 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:yell/home/controller.dart';
 import 'package:yell/home/utils/commnUtils.dart';
 
-class NormalChannel extends GetView<HomeController> {
+class CopyChannel extends GetView<HomeController> {
   final log = Logger();
   var url = "".obs;
-
   @override
   Widget build(BuildContext context) {
-    url.value = "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}";
+    url.value = "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}/cp";
     return ChannelWidget(
-      title: "普通推送通道",
+      title: "点击消息复制内容",
       topic: "你好",
       content: "世界",
       url: url,
@@ -40,7 +38,6 @@ class NormalChannel extends GetView<HomeController> {
     log.i("topic: $topic, content: $content");
     controller.state.topic = topic;
     controller.state.content = content;
-    url.value = "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}";
+    url.value = "${controller.state.url}/${controller.state.alias}/${controller.state.topic}/${controller.state.content}/cp";
   }
-
 }
