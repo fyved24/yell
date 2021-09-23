@@ -5,6 +5,7 @@ import 'package:yell/home/controller.dart';
 class HistoryListWidget extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
+
     return Container(
       width: 230,
       child: Drawer(
@@ -37,8 +38,8 @@ class HistoryListWidget extends GetView<HomeController> {
                       separatorBuilder: (_, __) => Divider(),
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
-                            title: Text('${controller.state.messages[index].topic}'),
-                            subtitle: Text('${controller.state.messages[index].content}'),
+                            title: Text('${controller.state.messages[controller.state.messages.length - index - 1].topic}'),
+                            subtitle: Text('${controller.state.messages[controller.state.messages.length - index - 1].content}'),
                             trailing: Icon(Icons.copy),
                             onTap: () {});
                       },

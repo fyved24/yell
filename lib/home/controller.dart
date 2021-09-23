@@ -107,8 +107,7 @@ class HomeController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-
-
+    logger.i("alias ${state.alias}");
     XiaoMiPushPlugin.addListener(onMessageArrived);
     XiaoMiPushPlugin.addListener(onClicked);
   }
@@ -148,20 +147,16 @@ class HomeController extends GetxController {
   onClicked(type, params) async {
     if (type == XiaoMiPushListenerTypeEnum.NotificationMessageClicked) {
       logger.i("${jsonEncode(params)}");
-      int action = int.parse(params.extra.action);
-      logger.i("action: $action");
-      switch(action) {
-        case 1:
-          await Clipboard.setData(ClipboardData(text: params.content));
-          showToast("payload copied to clipboard!");
-          logger.i("payload copied to clipboard!");
-          break;
-        case 2:
-          var url = "http://${params.content}";
-          await canLaunch(url) ? await launch(url) : throw 'Could not launch ${url}';
-          break;
-        default:
-          return;
+      var action = jsonDecode(params.extra.action);
+      var actionMap = Map<String, dynamic>.from(action);
+      if (actionMap.containsKey("copy")) {
+        await Clipboard.setData(ClipboardData(text: params.content));
+        showToast("payload copied to clipboard!");
+        logger.i("payload copied to clipboard!");
+      }
+      if (actionMap.containsKey("url")) {
+        var url = actionMap['url'];
+        await canLaunch(url) ? await launch(url) : throw 'Could not launch $url';
       }
     }
   }
